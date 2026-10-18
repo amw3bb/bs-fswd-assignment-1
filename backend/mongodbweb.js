@@ -1,7 +1,9 @@
 import { createServer } from 'node:http'
 import { MongoClient } from 'mongodb'
 
-const uri = globalThis.process?.env.MONGODB_URI ?? 'mongodb://admin:123@localhost:27017/mydb?authSource=admin'
+const uri =
+  globalThis.process?.env.MONGODB_URI ??
+  'mongodb://admin:123@localhost:27017/mydb?authSource=admin'
 const dbName = 'mydb'
 const client = new MongoClient(uri)
 
