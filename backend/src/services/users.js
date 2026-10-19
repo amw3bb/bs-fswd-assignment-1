@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt'
 import { User } from '../db/models/user.js'
+import { listPostsByAuthor as listPostsByAuthorId } from './posts.js'
 
 export async function createUser({ username, password }) {
   const hashedPassword = await bcrypt.hash(password, 10)
@@ -25,7 +26,7 @@ export async function getUserInfoById(userId) {
 }
 
 export async function listPostsByAuthor(authorUsername, options) {
-  const user = await User.findOne({ username: authorUsername })
-  if (!user) return []
-  return await listPosts({ author: user._id }, options)
+  const user = await User.findOne({ username: authorUsername })
+  if (!user) return []
+  return await listPostsByAuthorId(user._id, options)
 }

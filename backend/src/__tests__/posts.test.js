@@ -1,10 +1,5 @@
-import mongoose from 'mongoose'
 import { describe, expect, test, beforeEach } from '@jest/globals'
 import {
-  createPost,
-  listAllPosts,
-  listPostsByAuthor,
-  listPostsByTag,
   getPostById,
   updatePost,
   deletePost,
@@ -41,21 +36,21 @@ describe('getting a post', () => {
 })
 describe('updating posts', () => {
   test('should update the specified property', async () => {
-    await updatePost(createdSamplePosts[0]._id, {
+    await updatePost('Daniel Bugl', createdSamplePosts[0]._id, {
       author: 'Test Author',
     })
     const updatedPost = await Post.findById(createdSamplePosts[0]._id)
     expect(updatedPost.author).toEqual('Test Author')
   })
   test('should not update other properties', async () => {
-    await updatePost(createdSamplePosts[0]._id, {
+    await updatePost('Daniel Bugl', createdSamplePosts[0]._id, {
       author: 'Test Author',
     })
     const updatedPost = await Post.findById(createdSamplePosts[0]._id)
     expect(updatedPost.title).toEqual('Learning Redux')
   })
   test('should update the updatedAt timestamp', async () => {
-    await updatePost(createdSamplePosts[0]._id, {
+    await updatePost('Daniel Bugl', createdSamplePosts[0]._id, {
       author: 'Test Author',
     })
     const updatedPost = await Post.findById(createdSamplePosts[0]._id)
@@ -64,21 +59,26 @@ describe('updating posts', () => {
     )
   })
   test('should fail if the id does not exist', async () => {
-    const post = await updatePost('000000000000000000000000', {
-      author: 'Test Author',
-    })
+    const post = await updatePost(
+      'Daniel Bugl',
+      '000000000000000000000000',
+      { author: 'Test Author' },
+    )
     expect(post).toEqual(null)
   })
 })
 describe('deleting posts', () => {
   test('should remove the post from the database', async () => {
-    const result = await deletePost(createdSamplePosts[0]._id)
+    const result = await deletePost('Daniel Bugl', createdSamplePosts[0]._id)
     expect(result.deletedCount).toEqual(1)
     const deletedPost = await Post.findById(createdSamplePosts[0]._id)
     expect(deletedPost).toEqual(null)
   })
   test('should fail if the id does not exist', async () => {
-    const result = await deletePost('000000000000000000000000')
+    const result = await deletePost(
+      'Daniel Bugl',
+      '000000000000000000000000',
+    )
     expect(result.deletedCount).toEqual(0)
   })
 })
