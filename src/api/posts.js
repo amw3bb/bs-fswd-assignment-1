@@ -1,19 +1,20 @@
-const backendUrl = import.meta.env.DEV
-  ? '/api/v1'
-  : import.meta.env.VITE_BACKEND_URL || '/api/v1'
-
 export const getPosts = async (queryParams) => {
   const res = await fetch(
-    `${backendUrl}/posts?` + new URLSearchParams(queryParams),
+    `${import.meta.env.VITE_BACKEND_URL}/posts?` +
+      new URLSearchParams(queryParams),
   )
   return await res.json()
 }
-export const createPost = async (post) => {
+export const createPost = async (token, post) => {
   const res = await fetch(
-    `${backendUrl}/posts`,
+    `${import.meta.env.VITE_BACKEND_URL}/
+        posts`,
     {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify(post),
     },
   )

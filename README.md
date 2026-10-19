@@ -9,7 +9,10 @@ root-level `.env` file containing the Atlas connection string:
 
 ```env
 DATABASE_URL=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/blog
+JWT_SECRET=<random-secret>
 ```
+
+Generate the signing secret with `openssl rand -hex 32` and keep it private.
 
 In Atlas, allow connections from the Codespaces environment's outbound IP in
 Network Access, then restart the backend:
