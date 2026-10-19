@@ -2,6 +2,24 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
+## Docker Compose database
+
+Compose uses the local MongoDB container by default. To use MongoDB Atlas, create a
+root-level `.env` file containing the Atlas connection string:
+
+```env
+DATABASE_URL=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/blog
+```
+
+In Atlas, allow connections from the Codespaces environment's outbound IP in
+Network Access, then restart the backend:
+
+```sh
+docker compose up -d --force-recreate blog-backend
+```
+
+Do not commit the `.env` file.
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
