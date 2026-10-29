@@ -14,6 +14,7 @@ export const login = async ({ username, password }) => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password }),
   })
+  console.log(res)
   if (!res.ok) throw new Error('failed to login')
   return await res.json()
 }

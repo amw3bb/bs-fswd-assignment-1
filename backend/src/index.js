@@ -1,5 +1,7 @@
 import dotenv from 'dotenv'
-dotenv.config()
+import { fileURLToPath } from 'node:url'
+dotenv.config({ path: fileURLToPath(new URL('../.env', import.meta.url)) })
+dotenv.config({ path: fileURLToPath(new URL('../../.env', import.meta.url)) })
 import { initDatabase } from './db/init.js'
 import { app } from './app.js'
 try {

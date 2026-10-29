@@ -6,7 +6,8 @@ import { Header } from '../components/Header.jsx'
 import { useQuery } from '@tanstack/react-query'
 import { getPosts } from '../api/posts.js'
 import { useState } from 'react'
-export function Blog() {
+
+export function Recipes() {
   const [author, setAuthor] = useState('')
   const [sortBy, setSortBy] = useState('createdAt')
   const [sortOrder, setSortOrder] = useState('descending')
@@ -18,13 +19,7 @@ export function Blog() {
   return (
     <div style={{ padding: 8 }}>
       <Header />
-            <br />
-      <hr />
-      <br />
-      <CreatePost />
-      <br />
-      <hr />
-      Filter by:
+      {/* Filter by:
       <PostFilter
         field='author'
         value={author}
@@ -37,7 +32,7 @@ export function Blog() {
         onChange={(value) => setSortBy(value)}
         orderValue={sortOrder}
         onOrderChange={(orderValue) => setSortOrder(orderValue)}
-      />
+      /> */}
       <hr />
       <PostList posts={posts} />
     </div>

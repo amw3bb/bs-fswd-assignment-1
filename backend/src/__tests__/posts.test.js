@@ -1,5 +1,6 @@
 import { describe, expect, test, beforeEach } from '@jest/globals'
 import {
+  createPost,
   getPostById,
   updatePost,
   deletePost,
@@ -25,6 +26,15 @@ beforeEach(async () => {
   }
 })
 describe('getting a post', () => {
+  test('should save the image URL', async () => {
+    const imageUrl = 'https://example.com/recipe.jpg'
+    const post = await createPost('test-user', {
+      title: 'Recipe with photo',
+      imageUrl,
+    })
+    expect(post.imageUrl).toEqual(imageUrl)
+  })
+
   test('should return the full post', async () => {
     const post = await getPostById(createdSamplePosts[0]._id)
     expect(post.toObject()).toEqual(createdSamplePosts[0].toObject())

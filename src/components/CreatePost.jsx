@@ -2,14 +2,16 @@ import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '../contexts/AuthContext.jsx'
 import { createPost } from '../api/posts.js'
+import { Link } from 'react-router-dom'
 export function CreatePost() {
   const [title, setTitle] = useState('')
   const [contents, setContents] = useState('')
+  const [imageUrl, setImageUrl] = useState('')
   const [token] = useAuth()
 // REMOVE author
   const queryClient = useQueryClient()
   const createPostMutation = useMutation({
-    mutationFn: () => createPost(token, { title, contents }), // REMOVE AUTHOR
+    mutationFn: () => createPost(token, { title, contents, imageUrl }), // REMOVE AUTHOR
     onSuccess: () => queryClient.invalidateQueries(['posts']),
   })
   const handleSubmit = (e) => {
@@ -30,12 +32,24 @@ export function CreatePost() {
         />
       </div>
       <br />
+      <div>
+        <label htmlFor='create-image-url'>Image URL: </label>
+        <input
+          type='url'
+          name='create-image-url'
+          id='create-image-url'
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+        />
+      </div>
+      <br />
       <textarea
         value={contents}
         onChange={(e) => setContents(e.target.value)}
       />
       <br />
       <br />
+
       <input
         type='submit'
         value={createPostMutation.isPending ? 'Creating....' : 'Create'}
@@ -44,7 +58,8 @@ export function CreatePost() {
       {createPostMutation.isSuccess ? (
         <>
           <br />
-          Post created successfully!
+          Recipe created successfully!
+          Go back to <Link to='/'>home</Link>.
         </>
       ) : null}
     </form>

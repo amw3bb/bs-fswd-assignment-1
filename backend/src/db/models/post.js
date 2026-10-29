@@ -3,6 +3,7 @@ const postSchema = new Schema({
   title: { type: String, required: true },
   author: String,
   contents: String,
+  imageUrl: String,
   tags: [String],
 },
 {
