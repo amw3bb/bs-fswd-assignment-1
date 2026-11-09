@@ -21,7 +21,8 @@
     "mongoose": "^9.11.2",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "react-router-dom": "^6.21.0"
+    "react-router-dom": "^6.21.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
