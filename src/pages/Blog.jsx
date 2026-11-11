@@ -7,7 +7,8 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getPosts } from '../api/posts.js'
 import { Helmet } from 'react-helmet-async'
-//import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
+import { Post } from '../components/Post.jsx'
 export function Blog({ initialData }) {
   const [author, setAuthor] = useState('')
   const [sortBy, setSortBy] = useState('createdAt')
@@ -52,7 +53,6 @@ export function Blog({ initialData }) {
     </div>
   )
 }
-// Blog.propTypes = {
-//   initialData: PropTypes.shape(PostList.propTypes.posts),
-// }
- 
+Blog.propTypes = {
+  initialData: PropTypes.arrayOf(PropTypes.shape(Post.propTypes)),
+}

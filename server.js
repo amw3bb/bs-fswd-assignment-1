@@ -3,6 +3,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import express from 'express'
 import dotenv from 'dotenv'
+import process from 'node:process'
 dotenv.config()
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 async function createDevServer() {
@@ -16,11 +17,7 @@ async function createDevServer() {
   app.use(vite.middlewares)
   app.use('*', async (req, res, next) => {
     if (req.originalUrl === '/sitemap.xml') {
-      const sitemap = await generateSitemap()
-      return res
-        .status(200)
-        .set({ 'Content-Type': 'application/xml' })
-        .end(sitemap)
+      return res.sendStatus(404)
     }
     try {
       const templateHtml = fs.readFileSync(
@@ -42,6 +39,21 @@ async function createDevServer() {
   })
   return app
 }
+function createProdServer() {
+  const app = express()
+  const distPath = path.resolve(__dirname, 'dist')
+  const indexPath = path.join(distPath, 'index.html')
+
+  app.use(express.static(distPath))
+  app.get('*', (req, res, next) => {
+    res.sendFile(indexPath, (error) => {
+      if (error) next(error)
+    })
+  })
+
+  return app
+}
+
 if (process.env.NODE_ENV === 'production') {
   const app = await createProdServer()
   app.listen(process.env.PORT, () =>

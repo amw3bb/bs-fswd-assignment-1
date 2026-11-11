@@ -2,10 +2,10 @@ import PropTypes from 'prop-types'
 import { User } from './User.jsx'
 import { Link } from 'react-router-dom'
 import slug from 'slug'
-export function Post({ title, contents, imageUrl, author, _id, fullPost=false }) {
+export function Post({ title, contents, author, _id, fullPost = false }) {
   return (
     <article>
-  {fullPost ? (
+      {fullPost ? (
         <h3>{title}</h3>
       ) : (
         <Link to={`/posts/${_id}/${slug(title)}`}>
@@ -19,7 +19,6 @@ export function Post({ title, contents, imageUrl, author, _id, fullPost=false })
           Written by <User id={author} />
         </em>
       )}
-
     </article>
   )
 }
@@ -29,5 +28,5 @@ Post.propTypes = {
   imageUrl: PropTypes.string,
   author: PropTypes.string,
   _id: PropTypes.string.isRequired,
-  fullPost: PropTypes.bool,
+  fullPost: PropTypes.bool,
 }

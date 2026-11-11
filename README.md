@@ -23,6 +23,12 @@ docker compose up -d --force-recreate blog-backend
 
 Do not commit the `.env` file.
 
+For the GitHub Actions deployment, add `JWT_SECRET` as a secret to the
+`production` GitHub Actions environment. The backend deployment reads this
+secret to sign login tokens. Configure `DATABASE_URL` on the `blog-backend`
+Cloud Run service as well; the deployment preserves existing Cloud Run
+environment variables.
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
