@@ -37,10 +37,10 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/blog-backend:${{ github.sha }}
       - id: deploy-backend
         name: Deploy backend
-        uses: google-github-actions/deploy-cloudrun@v3
+        uses: google-github-actions/deploy-cloudrun@v1
         with:
           service: blog-backend
-          image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/blog-backend:${{ github.sha }}
+          image: ${{ secrets.DOCKERHUB_USERNAME }}/blog-backend:${{ github.sha }}
           region: ${{ secrets.GOOGLECLOUD_REGION }}
           flags: --no-invoker-iam-check
           env_vars: |-
@@ -55,9 +55,9 @@ jobs:
           build-args: VITE_BACKEND_URL=${{ steps.deploy-backend.outputs.url }}/api/v1
       - id: deploy-frontend
         name: Deploy frontend
-        uses: google-github-actions/deploy-cloudrun@v3
+        uses: google-github-actions/deploy-cloudrun@v1
         with:
           service: blog-frontend
-          image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/blog-frontend-2:${{ github.sha }}
+          image: ${{ secrets.DOCKERHUB_USERNAME }}/blog-frontend-2:${{ github.sha }}
           region: ${{ secrets.GOOGLECLOUD_REGION }}
           flags: --no-invoker-iam-check
