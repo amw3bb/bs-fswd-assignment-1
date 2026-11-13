@@ -1,75 +1,118 @@
+
 name: Deploy Blog Application
+
 on:
   push:
     branches:
       - main
+
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     environment:
       name: production
       url: ${{ steps.deploy-frontend.outputs.url }}
+
     steps:
-      - uses: actions/checkout@v3
+      # Checkout source code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Prevent Google credentials from entering Docker images
+      - name: Exclude Google credentials from Docker
+        run: |
+          touch .dockerignore
+          echo 'gha-creds-*.json' >> .dockerignore
+
+      # Configure Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Authenticate to Docker Hub
       - name: Login to Docker Hub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - uses: google-github-actions/auth@v1
+
+      # Authenticate to Google Cloud
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
         with:
-          service_account: ${{ secrets.GOOGLECLOUD_SERVICE_ACCOUNT }}
           credentials_json: ${{ secrets.GOOGLECLOUD_CREDENTIALS }}
+
+      # Validate JWT secret
       - name: Validate backend login secret
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
         run: |
           if [ -z "$JWT_SECRET" ]; then
-            echo "::error::Set JWT_SECRET in the production GitHub Actions environment."
+            echo "::error::Set JWT_SECRET in the production environment."
             exit 1
           fi
-      - name: Build and push backend image
-        uses: docker/build-push-action@v4
+
+      # Build and push backend to Docker Hub
+      - id: build-backend
+        name: Build and push backend image
+        uses: docker/build-push-action@v6
         with:
           context: ./backend
           file: ./backend/Dockerfile
+          platforms: linux/amd64
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/blog-backend:${{ github.sha }}
+          tags: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/blog-backend:${{ github.sha }}
 
+      # Verify backend image is publicly accessible
       - name: Verify backend image
         env:
-          IMAGE: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/blog-backend:${{ github.sha }}
+          IMAGE: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/blog-backend@${{ steps.build-backend.outputs.digest }}
         run: |
           DOCKER_CONFIG="$(mktemp -d)" \
             docker buildx imagetools inspect "$IMAGE"
 
-
-
-
-          
+      # Deploy backend using the image digest
       - id: deploy-backend
         name: Deploy backend
-        uses: google-github-actions/deploy-cloudrun@v1
+        uses: google-github-actions/deploy-cloudrun@v3
         with:
           service: blog-backend
-          image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/blog-backend:${{ github.sha }}
+          image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/blog-backend@${{ steps.build-backend.outputs.digest }}
           region: ${{ secrets.GOOGLECLOUD_REGION }}
           flags: --no-invoker-iam-check
-          env_vars: |-
+          env_vars: |
             JWT_SECRET=${{ secrets.JWT_SECRET }}
-      - name: Build and push frontend image
-        uses: docker/build-push-action@v4
+
+      # Build and push frontend to Docker Hub
+      - id: build-frontend
+        name: Build and push frontend image
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
+          platforms: linux/amd64
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/blog-frontend-2:${{ github.sha }}
-          build-args: VITE_BACKEND_URL=${{ steps.deploy-backend.outputs.url }}/api/v1
+          tags: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/blog-frontend-2:${{ github.sha }}
+          build-args: |
+            VITE_BACKEND_URL=${{ steps.deploy-backend.outputs.url }}/api/v1
+
+      # Verify frontend image is publicly accessible
+      - name: Verify frontend image
+        env:
+          IMAGE: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/blog-frontend-2@${{ steps.build-frontend.outputs.digest }}
+        run: |
+          DOCKER_CONFIG="$(mktemp -d)" \
+            docker buildx imagetools inspect "$IMAGE"
+
+      # Deploy frontend using the image digest
       - id: deploy-frontend
         name: Deploy frontend
-        uses: google-github-actions/deploy-cloudrun@v1
+        uses: google-github-actions/deploy-cloudrun@v3
         with:
           service: blog-frontend
-          image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/blog-frontend-2:${{ github.sha }}
+          image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/blog-frontend-2@${{ steps.build-frontend.outputs.digest }}
           region: ${{ secrets.GOOGLECLOUD_REGION }}
           flags: --no-invoker-iam-check
