@@ -30,6 +30,30 @@ Cloud Run service as well; the deployment preserves existing Cloud Run
 environment variables. The workflow pushes the frontend image to the public
 Docker Hub repository `${DOCKERHUB_USERNAME}/blog-frontend-2`.
 
+The workflow pushes both images to Docker Hub, then deploys through an
+Artifact Registry remote repository that proxies Docker Hub. Create the remote
+repository once in the same project and region as Cloud Run:
+
+```sh
+gcloud services enable artifactregistry.googleapis.com --project=PROJECT_ID
+gcloud artifacts repositories create dockerhub-remote \
+  --project=PROJECT_ID \
+  --repository-format=docker \
+  --location=REGION \
+  --mode=remote-repository \
+  --remote-repo-config-desc="Docker Hub image cache" \
+  --remote-docker-repo=DOCKER-HUB
+gcloud artifacts repositories add-iam-policy-binding dockerhub-remote \
+  --project=PROJECT_ID \
+  --location=REGION \
+  --member="serviceAccount:GOOGLECLOUD_SERVICE_ACCOUNT_EMAIL" \
+  --role=roles/artifactregistry.reader
+```
+
+Replace `PROJECT_ID` with the project ID and `REGION` with the value of
+`GOOGLECLOUD_REGION`. This remote repository caches images from Docker Hub; it
+does not replace Docker Hub as the image source.
+
 The deployment makes both Cloud Run services publicly invokable because the
 browser calls the backend directly. The backend still applies its application
 authentication where required. The deployment identity must be allowed to

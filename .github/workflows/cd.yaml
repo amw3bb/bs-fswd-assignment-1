@@ -16,7 +16,8 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - uses: google-github-actions/auth@v1
+      - id: google-auth
+        uses: google-github-actions/auth@v1
         with:
           service_account: ${{ secrets.GOOGLECLOUD_SERVICE_ACCOUNT }}
           credentials_json: ${{ secrets.GOOGLECLOUD_CREDENTIALS }}
@@ -40,7 +41,7 @@ jobs:
         uses: google-github-actions/deploy-cloudrun@v1
         with:
           service: blog-backend
-          image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/blog-backend:${{ github.sha }}
+          image: ${{ secrets.GOOGLECLOUD_REGION }}-docker.pkg.dev/${{ steps.google-auth.outputs.project_id }}/dockerhub-remote/${{ secrets.DOCKERHUB_USERNAME }}/blog-backend:${{ github.sha }}
           region: ${{ secrets.GOOGLECLOUD_REGION }}
           flags: --no-invoker-iam-check
           env_vars: |-
@@ -58,6 +59,6 @@ jobs:
         uses: google-github-actions/deploy-cloudrun@v1
         with:
           service: blog-frontend
-          image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/blog-frontend-2:${{ github.sha }}
+          image: ${{ secrets.GOOGLECLOUD_REGION }}-docker.pkg.dev/${{ steps.google-auth.outputs.project_id }}/dockerhub-remote/${{ secrets.DOCKERHUB_USERNAME }}/blog-frontend-2:${{ github.sha }}
           region: ${{ secrets.GOOGLECLOUD_REGION }}
           flags: --no-invoker-iam-check
