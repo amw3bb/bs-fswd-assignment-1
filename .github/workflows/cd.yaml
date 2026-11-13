@@ -51,13 +51,13 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/blog-frontend:${{ github.sha }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/blog-frontend-2:${{ github.sha }}
           build-args: VITE_BACKEND_URL=${{ steps.deploy-backend.outputs.url }}/api/v1
       - id: deploy-frontend
         name: Deploy frontend
         uses: google-github-actions/deploy-cloudrun@v1
         with:
           service: blog-frontend
-          image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/blog-frontend:${{ github.sha }}
+          image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/blog-frontend-2:${{ github.sha }}
           region: ${{ secrets.GOOGLECLOUD_REGION }}
           flags: --no-invoker-iam-check
