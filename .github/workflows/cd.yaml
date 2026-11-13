@@ -35,6 +35,18 @@ jobs:
           file: ./backend/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/blog-backend:${{ github.sha }}
+
+      - name: Verify backend image
+        env:
+          IMAGE: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/blog-backend:${{ github.sha }}
+        run: |
+          DOCKER_CONFIG="$(mktemp -d)" \
+            docker buildx imagetools inspect "$IMAGE"
+
+
+
+
+          
       - id: deploy-backend
         name: Deploy backend
         uses: google-github-actions/deploy-cloudrun@v1
