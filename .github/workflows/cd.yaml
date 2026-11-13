@@ -42,6 +42,7 @@ jobs:
           service: blog-backend
           image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/blog-backend:${{ github.sha }}
           region: ${{ secrets.GOOGLECLOUD_REGION }}
+          flags: --no-invoker-iam-check
           env_vars: |-
             JWT_SECRET=${{ secrets.JWT_SECRET }}
       - name: Build and push frontend image
@@ -59,3 +60,4 @@ jobs:
           service: blog-frontend
           image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/blog-frontend:${{ github.sha }}
           region: ${{ secrets.GOOGLECLOUD_REGION }}
+          flags: --no-invoker-iam-check

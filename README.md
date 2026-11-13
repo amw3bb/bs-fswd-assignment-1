@@ -29,6 +29,13 @@ secret to sign login tokens. Configure `DATABASE_URL` on the `blog-backend`
 Cloud Run service as well; the deployment preserves existing Cloud Run
 environment variables.
 
+The deployment makes both Cloud Run services publicly invokable because the
+browser calls the backend directly. The backend still applies its application
+authentication where required. The deployment identity must be allowed to
+disable the Cloud Run Invoker IAM check; if an organization policy requires
+that check, a project administrator must change the policy or the application
+must use an authenticated backend/proxy instead.
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
