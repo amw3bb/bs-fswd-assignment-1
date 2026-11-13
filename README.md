@@ -32,9 +32,13 @@ environment variables.
 The deployment makes both Cloud Run services publicly invokable because the
 browser calls the backend directly. The backend still applies its application
 authentication where required. The deployment identity must be allowed to
-disable the Cloud Run Invoker IAM check; if an organization policy requires
-that check, a project administrator must change the policy or the application
-must use an authenticated backend/proxy instead.
+disable the Cloud Run Invoker IAM check. Grant the identity used by
+`GOOGLECLOUD_SERVICE_ACCOUNT` the Cloud Run Admin role (`roles/run.admin`) on
+the Google Cloud project, or a custom role that includes
+`run.services.setIamPolicy` and the permissions needed to deploy. If an
+organization policy requires the Invoker IAM check, a project administrator
+must change the policy or the application must use an authenticated
+backend/proxy instead.
 
 Currently, two official plugins are available:
 
