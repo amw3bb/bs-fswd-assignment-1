@@ -3,10 +3,12 @@ import {
   getDailyViews,
   getDailyDurations,
   trackEvent,
+} from '../services/events.js'
+import {
   getPostLikes,
   getPostLikesCounts,
   likePost,
-} from '../services/events.js'
+} from '../services/likes.js'
 import { getPostById } from '../services/posts.js'
 import { requireAuth } from '../../middleware/jwt.js'
 import { Types } from 'mongoose'

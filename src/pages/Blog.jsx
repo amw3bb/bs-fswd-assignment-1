@@ -40,7 +40,12 @@ export function Blog({ initialData }) {
       </Helmet>
       <Header />
       <Stack spacing={3} sx={{ width: '100%', p: { xs: 2, sm: 3 } }}>
-        <Typography variant='h4' component='h1'>
+        <Typography
+          variant='h4'
+          component='h1'
+          color='primary'
+          fontWeight={600}
+        >
           Recipes
         </Typography>
         <Paper variant='outlined' sx={{ width: '100%', p: { xs: 2, sm: 3 } }}>

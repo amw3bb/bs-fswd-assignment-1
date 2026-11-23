@@ -9,12 +9,13 @@ import {
 import jwt from 'jsonwebtoken'
 import { app } from '../app.js'
 import { Event } from '../db/models/event.js'
+import { Like } from '../db/models/like.js'
 import { Post } from '../db/models/post.js'
 import {
   getPostLikes,
   getPostLikesCounts,
   likePost,
-} from '../services/events.js'
+} from '../services/likes.js'
 
 let post
 let server
@@ -29,6 +30,7 @@ beforeAll(async () => {
 
 beforeEach(async () => {
   await Event.deleteMany({})
+  await Like.deleteMany({})
   await Post.deleteMany({})
   post = await new Post({ title: 'Test recipe' }).save()
 })
@@ -44,6 +46,8 @@ describe('recipe likes', () => {
     await likePost(post._id, 'alice')
     await likePost(post._id, 'alice')
 
+    await expect(Like.countDocuments({})).resolves.toBe(1)
+    await expect(Event.countDocuments({})).resolves.toBe(0)
     await expect(getPostLikes(post._id, 'alice')).resolves.toEqual({
       likes: 1,
       liked: true,

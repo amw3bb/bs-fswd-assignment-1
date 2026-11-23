@@ -114,7 +114,8 @@ export function ViewPost({ postId }) {
                 <Button
                   variant='contained'
                   onClick={() => likeMutation.mutate()}
-                  disabled={likeMutation.isPending}
+                  disabled={likeMutation.isPending || likesQuery.data?.liked}
+                  aria-pressed={Boolean(likesQuery.data?.liked)}
                 >
                   {likesQuery.data?.liked ? 'Liked' : 'Like'}
                 </Button>

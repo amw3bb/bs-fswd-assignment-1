@@ -11,12 +11,16 @@ const queryClient = new QueryClient()
 const router = createBrowserRouter(routes)
 const theme = createTheme({
   palette: {
-    primary: { main: '#108ae7' },
-    secondary: { main: '#f0f2f6' },
-    background: { default: '#f8f8f4' },
+    primary: { main: '#c54f2d' },
+    secondary: { main: '#efbd32' },
+    background: { default: '#f2e7cb' },
   },
   typography: {
     fontFamily: "'DM Sans', 'Segoe UI', Roboto, sans-serif",
+  },
+  a: {
+    textDecoration: 'none',
+    color: '#94b38a',
   },
 })
 

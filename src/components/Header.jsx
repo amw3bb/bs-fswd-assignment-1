@@ -13,7 +13,14 @@ export function Header() {
 
   return (
     <AppBar position='static' sx={{ width: '100%' }}>
-      <Toolbar sx={{ width: '100%', justifyContent: 'space-between', gap: 2 }}>
+      <Toolbar
+        sx={{
+          width: '100%',
+          justifyContent: 'flex-end',
+          gap: 2,
+          backgroundColor: 'primary',
+        }}
+      >
         {username ? (
           <Stack
             direction={{ xs: 'column', sm: 'row', lg: 'row' }}
@@ -31,9 +38,9 @@ export function Header() {
               onClick={() => setToken(null)}
               sx={{
                 alignSelf: { xs: 'flex-end', sm: 'auto' },
-                bgcolor: '#ffeb3b',
+                bgcolor: 'secondary',
                 color: '#233127',
-                '&:hover': { bgcolor: '#fdd835' },
+                '&:hover': { bgcolor: 'secondary' },
               }}
             >
               Log out
@@ -44,7 +51,12 @@ export function Header() {
             <Button component={RouterLink} to='/login' color='inherit'>
               Log in
             </Button>
-            <Button component={RouterLink} to='/signup' color='inherit'>
+            <Button
+              component={RouterLink}
+              to='/signup'
+              color='secondary'
+              variant='contained'
+            >
               Sign up
             </Button>
           </Stack>
