@@ -12,6 +12,11 @@ import {
   VictoryLine,
   VictoryVoronoiContainer,
 } from 'victory'
+import Box from '@mui/material/Box'
+import Paper from '@mui/material/Paper'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
+
 export function PostStats({ postId }) {
   const totalViews = useQuery({
     queryKey: ['totalViews', postId],
@@ -30,46 +35,58 @@ export function PostStats({ postId }) {
     dailyViews.isLoading ||
     dailyDurations.isLoading
   ) {
-    return <div>loading stats...</div>
+    return <Typography color='text.secondary'>Loading stats...</Typography>
   }
   return (
-    <div>
-      <b>{totalViews.data?.views} total views</b>
-      <VictoryChart domainPadding={16}>
-          <VictoryBar
-            labelComponent={<VictoryTooltip />}
-            data={dailyViews.data?.map((d) => ({
-              x: new Date(d._id),
-              y: d.views,
-              label: `${new Date(d._id).toLocaleDateString()}:${d.views} views`,
-            }))}
-          />
-        </VictoryChart>
-        <div style={{ width: 512 }}>
-        <h4>Daily Average Viewing Duration</h4>
-        <VictoryChart
-          domainPadding={16}
-          containerComponent={
-            <VictoryVoronoiContainer
-              voronoiDimension='x'
-              labels={({ datum }) =>
-                `${datum.x.toLocaleDateString()}: ${datum.y.toFixed(2)} minutes`
-              }
+    <Stack spacing={3} sx={{ width: '100%' }}>
+      <Typography variant='h6' component='p'>
+        {totalViews.data?.views} total views
+      </Typography>
+      <Paper variant='outlined' sx={{ width: '100%', p: { xs: 1, sm: 2 } }}>
+        <Box sx={{ width: '100%' }}>
+          <VictoryChart domainPadding={16}>
+            <VictoryBar
               labelComponent={<VictoryTooltip />}
+              data={dailyViews.data?.map((d) => ({
+                x: new Date(d._id),
+                y: d.views,
+                label: `${new Date(d._id).toLocaleDateString()}:${
+                  d.views
+                } views`,
+              }))}
             />
-          }
-        >
-          {' '}
-          <VictoryLine
-            data={dailyDurations.data?.map((d) => ({
-              x: new Date(d._id),
-              y: d.averageDuration / (60 * 1000),
-            }))}
-          />{' '}
-        </VictoryChart>
-      </div>
-    </div>
-    
+          </VictoryChart>
+        </Box>
+      </Paper>
+      <Paper variant='outlined' sx={{ width: '100%', p: { xs: 1, sm: 2 } }}>
+        <Typography variant='h6' component='h2' sx={{ px: 1, pt: 1 }}>
+          Daily Average Viewing Duration
+        </Typography>
+        <Box sx={{ width: '100%' }}>
+          <VictoryChart
+            domainPadding={16}
+            containerComponent={
+              <VictoryVoronoiContainer
+                voronoiDimension='x'
+                labels={({ datum }) =>
+                  `${datum.x.toLocaleDateString()}: ${datum.y.toFixed(
+                    2,
+                  )} minutes`
+                }
+                labelComponent={<VictoryTooltip />}
+              />
+            }
+          >
+            <VictoryLine
+              data={dailyDurations.data?.map((d) => ({
+                x: new Date(d._id),
+                y: d.averageDuration / (60 * 1000),
+              }))}
+            />
+          </VictoryChart>
+        </Box>
+      </Paper>
+    </Stack>
   )
 }
 PostStats.propTypes = {

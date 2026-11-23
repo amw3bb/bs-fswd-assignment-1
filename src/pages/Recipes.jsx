@@ -2,6 +2,8 @@ import { PostList } from '../components/PostList.jsx'
 import { Header } from '../components/Header.jsx'
 import { useQuery } from '@tanstack/react-query'
 import { getPosts } from '../api/posts.js'
+import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
 
 export function Recipes() {
   const filters = {
@@ -15,24 +17,11 @@ export function Recipes() {
   })
   const posts = postsQuery.data ?? []
   return (
-    <div style={{ padding: 8 }}>
+    <Box sx={{ width: '100%' }}>
       <Header />
-      {/* Filter by:
-      <PostFilter
-        field='author'
-        value={author}
-        onChange={(value) => setAuthor(value)}
-      />
-      <br />
-      <PostSorting
-        fields={['createdAt', 'updatedAt']}
-        value={sortBy}
-        onChange={(value) => setSortBy(value)}
-        orderValue={sortOrder}
-        onOrderChange={(orderValue) => setSortOrder(orderValue)}
-      /> */}
-      <hr />
-      <PostList posts={posts} />
-    </div>
+      <Stack spacing={3} sx={{ width: '100%', p: { xs: 2, sm: 3 } }}>
+        <PostList posts={posts} />
+      </Stack>
+    </Box>
   )
 }
