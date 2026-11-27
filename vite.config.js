@@ -5,6 +5,7 @@ import { defineConfig, loadEnv } from 'vite'
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
+  const backendTarget = env.BACKEND_TARGET || 'http://localhost:3000'
 
   return {
     define: {
@@ -14,7 +15,12 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         '/api': {
-          target: 'http://localhost:3000',
+          target: backendTarget,
+          changeOrigin: true,
+        },
+        '/socket.io': {
+          target: backendTarget,
+          ws: true,
           changeOrigin: true,
         },
       },

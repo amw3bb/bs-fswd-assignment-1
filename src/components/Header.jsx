@@ -6,10 +6,17 @@ import Typography from '@mui/material/Typography'
 import { Link as RouterLink } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode'
 import { useAuth } from '../contexts/AuthContext.jsx'
+import { useSocket } from '../contexts/SocketIOContext.jsx'
 
 export function Header() {
   const [token, setToken] = useAuth()
+  const { socket } = useSocket()
   const username = token ? jwtDecode(token).sub : null
+
+  const handleLogout = () => {
+    socket?.disconnect()
+    setToken(null)
+  }
 
   return (
     <AppBar position='static' sx={{ width: '100%' }}>
@@ -35,7 +42,7 @@ export function Header() {
             </Button>
             <Button
               variant='contained'
-              onClick={() => setToken(null)}
+              onClick={handleLogout}
               sx={{
                 alignSelf: { xs: 'flex-end', sm: 'auto' },
                 bgcolor: 'secondary',

@@ -6,6 +6,7 @@ import { HelmetProvider } from 'react-helmet-async'
 import Box from '@mui/material/Box'
 import CssBaseline from '@mui/material/CssBaseline'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
+import { SocketIOContextProvider } from './contexts/SocketIOContext.jsx'
 
 const queryClient = new QueryClient()
 const router = createBrowserRouter(routes)
@@ -32,7 +33,9 @@ export function App() {
         <HelmetProvider>
           <QueryClientProvider client={queryClient}>
             <AuthContextProvider>
-              <RouterProvider router={router} />
+              <SocketIOContextProvider>
+                <RouterProvider router={router} />
+              </SocketIOContextProvider>
             </AuthContextProvider>
           </QueryClientProvider>
         </HelmetProvider>

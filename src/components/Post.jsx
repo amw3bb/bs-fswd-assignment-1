@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import { User } from './User.jsx'
+import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
 import Link from '@mui/material/Link'
 import Paper from '@mui/material/Paper'
@@ -11,6 +12,7 @@ import slug from 'slug'
 export function Post({
   title,
   contents,
+  imageUrl,
   author,
   _id,
   fullPost = false,
@@ -22,6 +24,22 @@ export function Post({
       variant='outlined'
       sx={{ width: '100%', p: { xs: 2, sm: 3 } }}
     >
+      {imageUrl && (
+        <Box
+          component='img'
+          src={imageUrl}
+          alt={title}
+          loading='lazy'
+          sx={{
+            display: 'block',
+            width: '100%',
+            maxHeight: 400,
+            objectFit: 'cover',
+            borderRadius: 1,
+            mb: 2,
+          }}
+        />
+      )}
       {fullPost ? (
         <Typography variant='h4' component='h1' gutterBottom>
           {title}
