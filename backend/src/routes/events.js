@@ -4,7 +4,7 @@ import {
   getDailyDurations,
   trackEvent,
 } from '../services/events.js'
-import { getPostById } from '../services/posts.js'
+//import { getPostById } from '../services/posts.js'
 export function eventRoutes(app) {
   app.post('/api/v1/events', async (req, res) => {
     try {

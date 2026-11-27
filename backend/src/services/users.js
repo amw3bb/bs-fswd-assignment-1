@@ -1,6 +1,5 @@
 import bcrypt from 'bcrypt'
 import { User } from '../db/models/user.js'
-import { listPostsByAuthor as listPostsByAuthorId } from './posts.js'
 
 export async function createUser({ username, password }) {
   const hashedPassword = await bcrypt.hash(password, 10)
